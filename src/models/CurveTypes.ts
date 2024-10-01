@@ -1,0 +1,3 @@
+export enum CurveType {
+  TAYLOR_EXPONENTIAL_V1 = "TAYLOR_EXPONENTIAL_V1",
+}

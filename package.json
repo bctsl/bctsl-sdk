@@ -1,0 +1,52 @@
+{
+  "name": "bctsl-sdk",
+  "version": "1.0.0",
+  "description": "SDK to interface with bctsl-contracts",
+  "main": "./.build/esm/index.js",
+  "types": "./.build/types/index.d.ts",
+  "scripts": {
+    "test:coverage": "jest --runInBand --coverage",
+    "build": "tsc -b ./tsconfig.cjs.json ./tsconfig.esm.json ./tsconfig.types.json",
+    "build:clean": "rm -rf ./.build",
+    "postinstall": "npm run-script build",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix"
+  },
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./.build/types/index.d.ts",
+      "require": "./.build/cjs/index.js",
+      "import": "./.build/esm/index.js",
+      "default": "./.build/esm/index.js"
+    }
+  },
+  "license": "ISC",
+  "dependencies": {
+    "@aeternity/aepp-sdk": "^13.3.3",
+    "aeternity-fungible-token": "git+ssh://git@github.com/aeternity/aeternity-fungible-token#v2.2.0",
+    "bctsl-contracts": "git+https://github.com/bctsl/bctsl-contracts.git#main",
+    "bignumber.js": "^9.1.2"
+  },
+  "devDependencies": {
+    "@aeternity/aeproject": "^4.10.2",
+    "@types/chai": "^4.3.17",
+    "@types/node": "^20.14.8",
+    "@types/jest": "^29.5.12",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "chai-as-promised": "^7.1.2",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "jest": "^29.7.0",
+    "mocha": "^10.7.3",
+    "prettier": "^3.3.3",
+    "ts-jest": "^29.2.4",
+    "typescript": "^5.5.4"
+  },
+  "engines": {
+    "npm": ">=8.0.0",
+    "node": ">=18.0.0"
+  }
+}
