@@ -13,7 +13,7 @@ Create a new collection, then a community using the community factory, and final
 ```typescript
 import { initCommunityFactory } from "bctsl-sdk";
 
-const COMMUNITY_FACTORY_CONTRACT_ADDRESS = "ct_...";
+const COMMUNITY_FACTORY_CONTRACT_ADDRESS = "ct_2QmAcPxY4TBbFmkSUhxU4UTwoRot8SMmZzaAKL6oyHmQqRL1rK";
 
 const communityFactory = await initCommunityFactory(aeSdk, COMMUNITY_FACTORY_CONTRACT_ADDRESS);
 
