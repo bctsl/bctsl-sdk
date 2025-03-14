@@ -6,6 +6,7 @@ import {
   CommunityFactory,
   deployCommunityFactory,
 } from "../index";
+import { expectObjectWithMapsEqual } from "./utils";
 
 export const allowedNameLength = 20n;
 export const allowedNameChars = [
@@ -65,11 +66,12 @@ describe("CommunityFactory", () => {
     it("affiliationTreasury ", async () => {
       affiliationTreasury = await communityFactory.affiliationTreasury();
       expect(affiliationTreasury).toBeDefined();
+      await utils.createSnapshot(aeSdk);
     });
 
     it("state", async () => {
       const state = await affiliationTreasury.state();
-      expect(state).toEqual({
+      expectObjectWithMapsEqual(state, {
         payout_periods: new Map(),
         affiliation_tree: new Map(),
         invitation_codes: new Map(),
@@ -79,7 +81,7 @@ describe("CommunityFactory", () => {
 
     it("revokeInvitationCode", async () => {
       await affiliationTreasury.registerInvitationCode(
-        invitation.publicKey,
+        [invitation.publicKey],
         BigInt(10 ** 15),
         0n,
       );
@@ -87,7 +89,7 @@ describe("CommunityFactory", () => {
       await affiliationTreasury.revokeInvitationCode(invitation.publicKey);
 
       const state = await affiliationTreasury.state();
-      expect(state).toEqual({
+      expectObjectWithMapsEqual(state, {
         payout_periods: new Map(),
         affiliation_tree: new Map(),
         invitation_codes: new Map(),
@@ -97,13 +99,13 @@ describe("CommunityFactory", () => {
 
     it("registerInvitationCode", async () => {
       await affiliationTreasury.registerInvitationCode(
-        invitation.publicKey,
+        [invitation.publicKey],
         BigInt(10 ** 15),
         0n,
       );
 
       const state = await affiliationTreasury.state();
-      expect(state).toEqual({
+      expectObjectWithMapsEqual(state, {
         payout_periods: new Map(),
         affiliation_tree: new Map(),
         invitation_codes: new Map([
@@ -128,7 +130,7 @@ describe("CommunityFactory", () => {
       );
 
       const state = await affiliationTreasury.state();
-      expect(state).toEqual({
+      expectObjectWithMapsEqual(state, {
         payout_periods: new Map(),
         affiliation_tree: new Map([[invitee.publicKey, aeSdk.address]]),
         invitation_codes: new Map([
@@ -151,6 +153,89 @@ describe("CommunityFactory", () => {
       await expect(affiliationTreasury.withdraw()).rejects.toThrow(
         "MINIMUM_ACCOUNTS_THRESHOLD_NOT_REACHED",
       );
+    });
+
+    describe("register multiple invitation codes", () => {
+      let invitation1, invitation2, invitation3;
+      const totalInvitationAmount = BigInt(9 ** 18);
+      const invitationAmount = totalInvitationAmount / BigInt(3); // 3 invitations
+
+      beforeAll(async () => {
+        await utils.rollbackSnapshot(aeSdk);
+        invitation1 = generateKeyPair();
+        invitation2 = generateKeyPair();
+        invitation3 = generateKeyPair();
+
+        await affiliationTreasury.registerInvitationCode(
+          [invitation1.publicKey, invitation2.publicKey, invitation3.publicKey],
+          BigInt(10 ** 15), // redemption fee
+          invitationAmount,
+        );
+      });
+
+      it("should register multiple invitation codes", async () => {
+        const state = await affiliationTreasury.state();
+        expectObjectWithMapsEqual(state, {
+          payout_periods: new Map(),
+          affiliation_tree: new Map(),
+          invitation_codes: new Map([
+            [invitation1.publicKey, [aeSdk.address, 50031545098999712n, false]],
+            [invitation2.publicKey, [aeSdk.address, 50031545098999712n, false]],
+            [invitation3.publicKey, [aeSdk.address, 50031545098999712n, false]],
+          ]),
+          unique_invitees: new Map(),
+        });
+      });
+
+      it("should redeem an invitation code and record sale transaction", async () => {
+        await affiliationTreasury.redeemInvitationCode(
+          invitation1.secretKey,
+          invitee.publicKey,
+        );
+
+        const buyAmount = BigInt(10 ** 18);
+        const rewardAmount = buyAmount * BigInt(5) / BigInt(1000);
+        await affiliationTreasury.contract.record_sale_transaction(invitee.publicKey, buyAmount, {
+          amount: rewardAmount
+        });
+
+        const newState = await affiliationTreasury.state();
+        expectObjectWithMapsEqual(newState, {
+          payout_periods: new Map([[
+            BigInt(Math.floor(Date.now() / 2592000000)), // 1000ms * 60s * 60m * 24h * 30d
+            new Map([[aeSdk.address, 3000000000000000n]])
+          ]]),
+          affiliation_tree: new Map([[invitee.publicKey, aeSdk.address]]),
+          invitation_codes: new Map([
+            [invitation1.publicKey, [aeSdk.address, 50031545098999712n, true]], // true=redeemed
+            [invitation2.publicKey, [aeSdk.address, 50031545098999712n, false]],
+            [invitation3.publicKey, [aeSdk.address, 50031545098999712n, false]],
+          ]),
+          unique_invitees: new Map([
+            [aeSdk.address, {
+              "WaitingForInvitations": [
+                new Set(),
+                new Map([[invitee.publicKey, 1000000000000000000n]])
+              ]
+            }]
+          ]),
+        });
+      });
+
+      it("should get invitation code", async () => {
+        const invitationCode = await affiliationTreasury.getInvitationCode(invitation1.publicKey);
+        expect(invitationCode).toEqual([aeSdk.address, 50031545098999712n, true]);
+      });
+
+      it("should get unique invitee", async () => {
+        const UniqueInvitee = await affiliationTreasury.getUniqueInvitee(aeSdk.address);
+        expectObjectWithMapsEqual(UniqueInvitee, {
+          "WaitingForInvitations": [
+            new Set(),
+            new Map([[invitee.publicKey, 1000000000000000000n]]),
+          ]
+        });
+      });
     });
   });
 });

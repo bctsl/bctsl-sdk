@@ -126,7 +126,7 @@ export class TokenSale {
     count: bigint | string | number,
     denomination?: Denomination,
     slippagePercent: bigint | string | number = 3n,
-  ): Promise<void> {
+  ): Promise<unknown> {
     const { tokenDecimals, priceAetto } = await this.priceAettoTokenDecimals(
       count,
       denomination,
@@ -146,12 +146,10 @@ export class TokenSale {
       )
       .toFixed(0);
 
-    return this.contract
-      .buy(countTokenDecimals, {
-        amount: priceAettoWithSlippage,
-        omitUnknown: true,
-      })
-      .then((res) => res.decodedResult);
+    return this.contract.buy(countTokenDecimals, {
+      amount: priceAettoWithSlippage,
+      omitUnknown: true,
+    });
   }
 
   async checkAndGetDAO(): Promise<DAO> {

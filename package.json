@@ -25,7 +25,7 @@
   "dependencies": {
     "@aeternity/aepp-sdk": "^13.3.3",
     "aeternity-fungible-token": "git+ssh://git@github.com/aeternity/aeternity-fungible-token#v2.2.0",
-    "bctsl-contracts": "git+https://github.com/bctsl/bctsl-contracts.git#main",
+    "bctsl-contracts": "git+https://github.com/bctsl/bctsl-contracts.git#v1.0.0",
     "bignumber.js": "^9.1.2"
   },
   "devDependencies": {

@@ -127,7 +127,7 @@ export class BondingCurveTokenSale extends TokenSale {
   async sellWithExistingAllowance(
     countTokenDecimals: string,
     slippagePercent: bigint | string | number = 3n,
-  ): Promise<bigint> {
+  ): Promise<unknown> {
     const sellReturn = await this.contract
       .sell_return(countTokenDecimals)
       .then((res) => res.decodedResult);
@@ -140,18 +140,16 @@ export class BondingCurveTokenSale extends TokenSale {
       )
       .toFixed(0);
 
-    return this.contract
-      .sell(countTokenDecimals, requiredReturnWithSlippage, {
-        omitUnknown: true,
-      })
-      .then((res) => res.decodedResult);
+    return this.contract.sell(countTokenDecimals, requiredReturnWithSlippage, {
+      omitUnknown: true,
+    });
   }
 
   async sell(
     count: bigint | string | number,
     denomination?: Denomination,
     slippagePercent: bigint | string | number = 3n,
-  ): Promise<bigint> {
+  ): Promise<unknown> {
     const countTokenDecimals = await this.createSellAllowance(
       count,
       denomination,

@@ -6,10 +6,16 @@ import {
 } from "@aeternity/aepp-sdk";
 import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
 
+export type InvitationCode = [Encoded.AccountAddress, bigint, boolean];
+
 export type InvitationCodes = Map<
   bigint,
-  [Encoded.AccountAddress, bigint, boolean]
+  InvitationCode
 >;
+
+export type UniqueInvitees =
+  | { ThresholdReached: [] }
+  | { WaitingForInvitations: [Encoded.AccountAddress[], Map<Encoded.AccountAddress, bigint>] };
 
 export interface AffiliationTreasuryState {
   payout_periods: Map<bigint, Map<Encoded.AccountAddress, bigint>>;
@@ -18,11 +24,11 @@ export interface AffiliationTreasuryState {
   unique_invitees: Map<
     bigint,
     | {
-        WaitingForInvitations: [
-          [Encoded.AccountAddress],
-          Map<Encoded.AccountAddress, bigint>,
-        ];
-      }
+      WaitingForInvitations: [
+        [Encoded.AccountAddress],
+        Map<Encoded.AccountAddress, bigint>,
+      ];
+    }
     | { ThresholdReached: [] }
   >;
 }
@@ -48,7 +54,7 @@ export class AffiliationTreasury {
   }
 
   async registerInvitationCode(
-    invitationAddress: Encoded.AccountAddress,
+    invitationAddress: Encoded.AccountAddress[],
     redemptionFeeCover: bigint,
     invitationAmount: bigint,
   ): Promise<void> {
@@ -56,7 +62,7 @@ export class AffiliationTreasury {
       invitationAddress,
       redemptionFeeCover,
       invitationAmount,
-      { amount: redemptionFeeCover + invitationAmount },
+      { amount: (redemptionFeeCover + invitationAmount) * BigInt(invitationAddress.length) },
     );
   }
 
@@ -70,6 +76,12 @@ export class AffiliationTreasury {
     return await this.contract
       .invitation_codes()
       .then(({ decodedResult }) => decodedResult as InvitationCodes);
+  }
+
+  async getInvitationCode(address: Encoded.AccountAddress): Promise<InvitationCode> {
+    return this.contract
+      .get_invitation_code(address)
+      .then(({ decodedResult }) => decodedResult as InvitationCode);
   }
 
   async redeemInvitationCode(
@@ -87,6 +99,14 @@ export class AffiliationTreasury {
     return await this.contract
       .get_accumulated_rewards(account)
       .then(({ decodedResult }) => decodedResult as bigint);
+  }
+
+  async getUniqueInvitee(
+    account: Encoded.AccountAddress,
+  ): Promise<UniqueInvitees> {
+    return this.contract
+      .get_unique_invitee(account)
+      .then(({ decodedResult }) => decodedResult as UniqueInvitees);
   }
 
   async withdraw(): Promise<void> {

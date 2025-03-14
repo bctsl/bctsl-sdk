@@ -69,7 +69,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           100000n,
           (await tokenSale.bondingCurveContract()).instance.$options.address,
         ),
-      ).toBe("100010066666700000");
+      ).toBe("60016670834166805");
 
       expect(
         await estimateInitialBuyPriceAetto(
@@ -77,7 +77,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           1000000n,
           (await tokenSale.bondingCurveContract()).instance.$options.address,
         ),
-      ).toBe("10000166667000001333");
+      ).toBe("5116708416805754216");
     });
   });
 
@@ -85,18 +85,18 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
     describe("18 decimals default", () => {
       it("default denomination", async () => {
         const price = await tokenSale.price(1n);
-        expect(price).toBe("0.00000000011055");
+        expect(price).toBe("0.000000100505025");
       });
 
       it("default denomination, fraction string", async () => {
         const price = await tokenSale.price("1.141358902342371412");
-        expect(price).toBe("0.000000000127798705");
+        expect(price).toBe("0.000000114713115752");
       });
 
       it("default denomination, fraction number", async () => {
         // number can't do so much precision
         const price = await tokenSale.price(1.14135);
-        expect(price).toBe("0.000000000127797606");
+        expect(price).toBe("0.000000114712220965");
       });
 
       it("same denomination, aetto, atto", async () => {
@@ -104,7 +104,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           denominationToken: TOKEN_AMOUNT_FORMATS.ATTO,
           denominationAe: AE_AMOUNT_FORMATS.AETTOS,
         });
-        expect(price).toBe("110550000");
+        expect(price).toBe("100505025000");
       });
 
       it("default denomination, aetto, full", async () => {
@@ -112,7 +112,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           denominationToken: TOKEN_AMOUNT_FORMATS.FULL,
           denominationAe: AE_AMOUNT_FORMATS.AETTOS,
         });
-        expect(price).toBe("110550000");
+        expect(price).toBe("100505025000");
       });
 
       it("default denomination, ae, smallest", async () => {
@@ -120,7 +120,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           denominationAe: AE_AMOUNT_FORMATS.AE,
           denominationToken: TOKEN_AMOUNT_FORMATS.ATTO,
         });
-        expect(price).toBe("0.00000000011055");
+        expect(price).toBe("0.000000100505025");
       });
     });
   });
@@ -207,7 +207,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
 
         await tokenSale.buy(2n);
         expect(buySpy.mock.calls[0][1]).toStrictEqual({
-          amount: "248436000",
+          amount: "207050703000",
           omitUnknown: true,
         });
       });
@@ -217,7 +217,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
 
         await tokenSale.buy(2n, undefined, 0);
         expect(buySpy.mock.calls[0][1]).toStrictEqual({
-          amount: "241200000", // + 0%
+          amount: "201020100000", // + 0%
           omitUnknown: true,
         });
       });
@@ -229,7 +229,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           "AE_AMOUNT_NOT_SUFFICIENT",
         );
         expect(buySpy.mock.calls[0][1]).toStrictEqual({
-          amount: "238788000", // - 1%
+          amount: "199009899000", // - 1%
           omitUnknown: true,
         });
       });
@@ -336,18 +336,18 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
 
       it("default denomination", async () => {
         const sellReturn = await tokenSale.sellReturn(1n);
-        expect(sellReturn).toBe("0.00000000010945");
+        expect(sellReturn).toBe("0.000000099504975");
       });
 
       it("default denomination, fraction string", async () => {
         const sellReturn = await tokenSale.sellReturn("0.141358902342371412");
-        expect(sellReturn).toBe("0.000000000016679427");
+        expect(sellReturn).toBe("0.000000014066517891");
       });
 
       it("default denomination, fraction number", async () => {
         // number can't do so much precision
         const sellReturn = await tokenSale.sellReturn(0.14135);
-        expect(sellReturn).toBe("0.000000000016678389");
+        expect(sellReturn).toBe("0.000000014065632032");
       });
 
       it("same denomination, aetto, atto", async () => {
@@ -355,7 +355,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           denominationToken: TOKEN_AMOUNT_FORMATS.ATTO,
           denominationAe: AE_AMOUNT_FORMATS.AETTOS,
         });
-        expect(sellReturn).toBe("109450000");
+        expect(sellReturn).toBe("99504975000");
       });
 
       it("default denomination, aetto, full", async () => {
@@ -363,7 +363,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           denominationToken: TOKEN_AMOUNT_FORMATS.FULL,
           denominationAe: AE_AMOUNT_FORMATS.AETTOS,
         });
-        expect(sellReturn).toBe("109450000");
+        expect(sellReturn).toBe("99504975000");
       });
 
       it("default denomination, ae, smallest", async () => {
@@ -371,7 +371,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
           denominationAe: AE_AMOUNT_FORMATS.AE,
           denominationToken: TOKEN_AMOUNT_FORMATS.ATTO,
         });
-        expect(sellReturn).toBe("0.00000000010945");
+        expect(sellReturn).toBe("0.000000099504975");
       });
     });
   });
@@ -397,14 +397,14 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
         const sellSpy = jest.spyOn(tokenSale.contract, "sell");
 
         await tokenSale.sell(2n);
-        expect(sellSpy.mock.calls[0][1]).toStrictEqual("270242000");
+        expect(sellSpy.mock.calls[0][1]).toStrictEqual("193068606000");
       });
 
       it("no slippage", async () => {
         const sellSpy = jest.spyOn(tokenSale.contract, "sell");
 
         await tokenSale.sell(2n, undefined, 0);
-        expect(sellSpy.mock.calls[0][1]).toStrictEqual("278600000");
+        expect(sellSpy.mock.calls[0][1]).toStrictEqual("199039800000");
       });
 
       it("negative slippage", async () => {
@@ -413,7 +413,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
         await expect(tokenSale.sell(2n, undefined, -1)).rejects.toThrow(
           "MINIMAL_RETURN_NOT_MEET",
         );
-        expect(sellSpy.mock.calls[0][1]).toStrictEqual("281386000");
+        expect(sellSpy.mock.calls[0][1]).toStrictEqual("201030198000");
       });
 
       it("default denomination, sell twice", async () => {
@@ -462,9 +462,8 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
       it("split function logic", async () => {
         const countTokenDecimals = await tokenSale.createSellAllowance(1n);
         expect(countTokenDecimals).toEqual("1000000000000000000"); // this is expected to be in the smallest unit
-        const sellReturn =
-          await tokenSale.sellWithExistingAllowance(countTokenDecimals);
-        expect(sellReturn).toEqual(149250000n); // this is expected to be in aetto
+        const sellReturn = await tokenSale.sellWithExistingAllowance(countTokenDecimals) as { decodedResult: bigint };
+        expect(sellReturn.decodedResult).toEqual(99524875000n); // this is expected to be in aetto
       });
     });
   });

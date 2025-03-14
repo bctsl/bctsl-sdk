@@ -6,4 +6,7 @@ export default {
   transform: {
     "^.+\\.tsx?$": ["ts-jest", { tsconfig: "./tsconfig.test.json" }],
   },
+  testPathIgnorePatterns: [
+    "src/__tests__/utils.ts"
+  ]
 };

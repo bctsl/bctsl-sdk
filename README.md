@@ -8,12 +8,12 @@ The SDK facilitates seamless interaction with the [BCTSL contracts](https://gith
 
 Create a new collection, then a community using the community factory, and finally initialize the token sale from the contract address as a user would.
 
-`$ npm i bctsl/bctsl-sdk`
+`$ npm i github:bctsl/bctsl-sdk`
 
 ```typescript
 import { initCommunityFactory } from "bctsl-sdk";
 
-const COMMUNITY_FACTORY_CONTRACT_ADDRESS = "ct_2QmAcPxY4TBbFmkSUhxU4UTwoRot8SMmZzaAKL6oyHmQqRL1rK";
+const COMMUNITY_FACTORY_CONTRACT_ADDRESS = "ct_25cqTw85wkF5cbcozmHHUCuybnfH9WaRZXSgEcNNXG9LsCJWTN";
 
 const communityFactory = await initCommunityFactory(aeSdk, COMMUNITY_FACTORY_CONTRACT_ADDRESS);
 
