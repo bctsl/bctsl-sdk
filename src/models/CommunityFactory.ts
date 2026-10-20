@@ -1,6 +1,9 @@
-import { AeSdkBase, Contract, ContractMethodsBase } from "@aeternity/aepp-sdk";
-import ContractWithMethods from "@aeternity/aepp-sdk/es/contract/Contract";
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
+import {
+  AeSdkBase,
+  Contract,
+  ContractMethodsBase,
+  Encoded,
+} from "@aeternity/aepp-sdk";
 import { BondingCurveTokenSale } from "./BondingCurveTokenSale";
 import { CurveType } from "./CurveTypes";
 import {
@@ -20,14 +23,11 @@ import { AffiliationTreasury } from "./AffiliationTreasury";
 import { BigNumber } from "bignumber.js";
 
 export class CommunityFactory {
-  contract: ContractWithMethods<ContractMethodsBase>;
+  contract: Contract<ContractMethodsBase>;
   aeSdk: AeSdkBase;
   address: Encoded.ContractAddress;
 
-  constructor(
-    contract: ContractWithMethods<ContractMethodsBase>,
-    aeSdk: AeSdkBase,
-  ) {
+  constructor(contract: Contract<ContractMethodsBase>, aeSdk: AeSdkBase) {
     this.contract = contract;
     this.address = contract.$options.address;
     this.aeSdk = aeSdk;
@@ -104,7 +104,8 @@ export class CommunityFactory {
       .get_community_management(tokenSaleAddress)
       .then((res) => res.decodedResult);
 
-    return await this.aeSdk.initializeContract({
+    return await Contract.initialize({
+      ...this.aeSdk.getContext(),
       aci: COMMUNITY_MANAGEMENT_ACI,
       address,
     });
@@ -127,9 +128,7 @@ export class CommunityFactory {
     return this.contract.version().then((res) => res.decodedResult);
   }
 
-  async protocolDAOTokenInstance(): Promise<
-    ContractWithMethods<ContractMethodsBase>
-  > {
+  async protocolDAOTokenInstance(): Promise<Contract<ContractMethodsBase>> {
     return this.contract
       .protocol_dao_token()
       .then((res) => tokenContractInstance(this.aeSdk, res.decodedResult));
@@ -150,7 +149,8 @@ export class CommunityFactory {
       .then((res) => res.decodedResult);
 
     return new AffiliationTreasury(
-      await this.aeSdk.initializeContract({
+      await Contract.initialize({
+        ...this.aeSdk.getContext(),
         aci: AFFILIATION_TREASURY_ACI,
         address,
       }),

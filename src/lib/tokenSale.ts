@@ -1,5 +1,4 @@
-import { AeSdkBase } from "@aeternity/aepp-sdk";
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
+import { AeSdkBase, Contract, Encoded } from "@aeternity/aepp-sdk";
 import TOKEN_SALE_ACI from "bctsl-contracts/generated/TokenSale.aci.json";
 import { SaleType, TokenSale } from "../models";
 import { initAffiliationTokenGatingTokenSale } from "./bondingCurve";
@@ -11,7 +10,8 @@ export async function initTokenSale(
   saleType: SaleType | string;
   instance: TokenSale;
 }> {
-  const contract = await aeSdk.initializeContract({
+  const contract = await Contract.initialize({
+    ...aeSdk.getContext(),
     aci: TOKEN_SALE_ACI,
     address,
   });
@@ -35,7 +35,8 @@ export async function initFallBack(
   aeSdk: AeSdkBase,
   address: Encoded.ContractAddress,
 ): Promise<TokenSale> {
-  const contract = await aeSdk.initializeContract({
+  const contract = await Contract.initialize({
+    ...aeSdk.getContext(),
     aci: TOKEN_SALE_ACI,
     address,
   });

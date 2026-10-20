@@ -1,5 +1,9 @@
-import { AeSdkBase, Contract, ContractMethodsBase } from "@aeternity/aepp-sdk";
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
+import {
+  AeSdkBase,
+  Contract,
+  ContractMethodsBase,
+  Encoded,
+} from "@aeternity/aepp-sdk";
 import BONDING_CURVE_EXPONENTIAL_CONTRACT_ACI from "bctsl-contracts/generated/BondingCurveExponential.aci.json";
 import {
   Denomination,
@@ -17,7 +21,8 @@ export async function estimateInitialBuyPriceAetto(
   denomination?: Denomination,
   fee?: number,
 ): Promise<string> {
-  const contract = await aeSdk.initializeContract({
+  const contract = await Contract.initialize({
+    ...aeSdk.getContext(),
     address: bondingCurveAddress,
     aci: BONDING_CURVE_ACI,
   });
@@ -50,7 +55,8 @@ export async function initBondingCurveContract(
   aeSdk: AeSdkBase,
   address: Encoded.ContractAddress,
 ): Promise<{ instance: Contract<ContractMethodsBase>; type: CurveType }> {
-  const contract = await aeSdk.initializeContract({
+  const contract = await Contract.initialize({
+    ...aeSdk.getContext(),
     aci: BONDING_CURVE_ACI,
     address,
   });
@@ -72,7 +78,8 @@ export async function initBondingCurveContract(
 
   return {
     type,
-    instance: await aeSdk.initializeContract({
+    instance: await Contract.initialize({
+      ...aeSdk.getContext(),
       aci,
       address,
     }),

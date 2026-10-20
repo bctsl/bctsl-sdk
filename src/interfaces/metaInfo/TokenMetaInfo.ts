@@ -1,4 +1,4 @@
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
+import { Encoded } from "@aeternity/aepp-sdk";
 
 export interface TokenMetaInfo {
   address: Encoded.ContractAddress;

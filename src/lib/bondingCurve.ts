@@ -1,5 +1,4 @@
-import { AeSdkBase } from "@aeternity/aepp-sdk";
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
+import { AeSdkBase, Contract, Encoded } from "@aeternity/aepp-sdk";
 import AFFILIATION_BONDING_CURVE_TOKEN_SALE_CONTRACT_ACI from "bctsl-contracts/generated/AffiliationBondingCurveTokenSale.aci.json";
 import { BondingCurveTokenSale } from "../models";
 import {
@@ -53,7 +52,8 @@ export async function initAffiliationTokenGatingTokenSale(
   aeSdk: AeSdkBase,
   address: Encoded.ContractAddress,
 ): Promise<BondingCurveTokenSale> {
-  const contract = await aeSdk.initializeContract({
+  const contract = await Contract.initialize({
+    ...aeSdk.getContext(),
     aci: AFFILIATION_BONDING_CURVE_TOKEN_SALE_CONTRACT_ACI,
     address,
   });

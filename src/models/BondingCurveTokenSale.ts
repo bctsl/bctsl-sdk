@@ -10,11 +10,11 @@ import {
   AE_AMOUNT_FORMATS,
   Contract,
   ContractMethodsBase,
+  Encoded,
   formatAmount,
 } from "@aeternity/aepp-sdk";
 import { CurveType } from "./CurveTypes";
 import { createOrChangeAllowance } from "../utils";
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
 import { BigNumber } from "bignumber.js";
 
 export class BondingCurveTokenSale extends TokenSale {

@@ -1,6 +1,9 @@
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
-import ContractWithMethods from "@aeternity/aepp-sdk/es/contract/Contract";
-import { AeSdkBase, ContractMethodsBase } from "@aeternity/aepp-sdk";
+import {
+  AeSdkBase,
+  Contract as ContractWithMethods,
+  ContractMethodsBase,
+  Encoded,
+} from "@aeternity/aepp-sdk";
 import { createOrChangeAllowance } from "../utils";
 import { DAOState } from "./DAO";
 

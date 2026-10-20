@@ -1,10 +1,10 @@
-import ContractWithMethods from "@aeternity/aepp-sdk/es/contract/Contract";
 import {
   AE_AMOUNT_FORMATS,
   AeSdkBase,
+  Contract as ContractWithMethods,
   ContractMethodsBase,
+  Encoded,
 } from "@aeternity/aepp-sdk";
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
 import { initDAOVote, tokenContractInstance } from "../utils";
 import { Vote, VoteMetadata } from "./Vote";
 

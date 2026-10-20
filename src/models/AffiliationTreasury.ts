@@ -1,10 +1,10 @@
-import ContractWithMethods from "@aeternity/aepp-sdk/es/contract/Contract";
 import {
   AeSdkBase,
+  Contract as ContractWithMethods,
   ContractMethodsBase,
+  Encoded,
   MemoryAccount,
 } from "@aeternity/aepp-sdk";
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
 
 export type InvitationCode = [Encoded.AccountAddress, bigint, boolean];
 
@@ -85,7 +85,7 @@ export class AffiliationTreasury {
   }
 
   async redeemInvitationCode(
-    invitationCode: string | Buffer,
+    invitationCode: Encoded.AccountSecretKey,
     inviteeAddress: Encoded.AccountAddress,
   ): Promise<void> {
     await this.contract.redeem_invitation_code(inviteeAddress, {

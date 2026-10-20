@@ -1,6 +1,9 @@
-import type { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
-import type { AeSdkBase, ContractMethodsBase } from "@aeternity/aepp-sdk";
-import type ContractWithMethods from "@aeternity/aepp-sdk/es/contract/Contract";
+import type {
+  AeSdkBase,
+  Contract as ContractWithMethods,
+  ContractMethodsBase,
+  Encoded,
+} from "@aeternity/aepp-sdk";
 import { BigNumber } from "bignumber.js";
 
 export async function createOrChangeAllowance(

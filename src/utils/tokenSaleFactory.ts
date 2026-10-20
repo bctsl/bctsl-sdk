@@ -1,6 +1,5 @@
 import COMMUNITY_FACTORY_CONTRACT_ACI from "bctsl-contracts/generated/CommunityFactory.aci.json";
-import { AeSdkBase } from "@aeternity/aepp-sdk";
-import { Encoded } from "@aeternity/aepp-sdk/es/utils/encoder";
+import { AeSdkBase, Contract, Encoded } from "@aeternity/aepp-sdk";
 import TOKEN_GATING_BYTECODEHASHES from "bctsl-contracts/generated/bytecode_hashes.json";
 import { CommunityFactory, DAO, Vote } from "../models";
 import DAO_ACI from "bctsl-contracts/generated/DAO.aci.json";
@@ -15,7 +14,8 @@ export async function initCommunityFactory(
   aeSdk: AeSdkBase,
   tokenSaleFactoryAddress: Encoded.ContractAddress,
 ): Promise<CommunityFactory> {
-  const contract = await aeSdk.initializeContract({
+  const contract = await Contract.initialize({
+    ...aeSdk.getContext(),
     address: tokenSaleFactoryAddress,
     aci: COMMUNITY_FACTORY_CONTRACT_ACI,
   });
@@ -27,7 +27,8 @@ export async function deployCommunityFactory(
   aeSdk: AeSdkBase,
   protocolDaoTokenName: string,
 ): Promise<CommunityFactory> {
-  const contract = await aeSdk.initializeContract({
+  const contract = await Contract.initialize({
+    ...aeSdk.getContext(),
     bytecode: TOKEN_GATING_BYTECODEHASHES["8.0.0"]["CommunityFactory.aes"]
       .bytecode as Encoded.ContractBytearray,
     aci: COMMUNITY_FACTORY_CONTRACT_ACI,
@@ -42,7 +43,8 @@ export async function initDAO(
   address: Encoded.ContractAddress,
 ): Promise<DAO> {
   return new DAO(
-    await aeSdk.initializeContract({
+    await Contract.initialize({
+      ...aeSdk.getContext(),
       aci: DAO_ACI,
       address: address,
     }),
@@ -56,7 +58,8 @@ export async function initDAOVote(
   voteId: bigint,
 ): Promise<Vote> {
   return new Vote(
-    await aeSdk.initializeContract({
+    await Contract.initialize({
+      ...aeSdk.getContext(),
       aci: DAO_VOTE_ACI,
       address: address,
     }),
