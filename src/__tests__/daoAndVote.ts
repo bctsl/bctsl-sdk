@@ -1,4 +1,4 @@
-import { beforeAll, describe, it } from "@jest/globals";
+import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import { utils } from "@aeternity/aeproject";
 
 import {
@@ -11,8 +11,9 @@ import {
   VOTE_TYPE,
   VoteMetadata,
 } from "../index";
-import { AeSdk, generateKeyPair } from "@aeternity/aepp-sdk";
+import { AeSdk } from "@aeternity/aepp-sdk";
 import { allowedNameChars, allowedNameLength } from "./communityFactory";
+import { generateKeyPair } from "./utils";
 
 describe("DAOAndVote", () => {
   let aeSdk: AeSdk;
@@ -52,7 +53,7 @@ describe("DAOAndVote", () => {
   });
 
   afterEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     await utils.rollbackSnapshot(aeSdk);
   });
 

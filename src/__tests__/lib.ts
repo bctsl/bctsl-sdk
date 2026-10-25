@@ -1,4 +1,4 @@
-import { beforeAll, describe, it } from "@jest/globals";
+import { afterEach, beforeAll, describe, expect, it } from "vitest";
 import { utils } from "@aeternity/aeproject";
 import { AeSdk } from "@aeternity/aepp-sdk";
 import {

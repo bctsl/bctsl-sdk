@@ -1,3 +1,12 @@
+import { expect } from "vitest";
+
+import { MemoryAccount } from "@aeternity/aepp-sdk";
+
+export function generateKeyPair() {
+  const account = MemoryAccount.generate();
+  return { publicKey: account.address, secretKey: account.secretKey };
+}
+
 function expectMapsEqual(map1: Map<any, any>, map2: Map<any, any>) {
   expect([...map1.entries()].sort()).toEqual([...map2.entries()].sort());
 }

@@ -1,12 +1,12 @@
-import { beforeAll, describe, it } from "@jest/globals";
+import { beforeAll, describe, expect, it } from "vitest";
 import { utils } from "@aeternity/aeproject";
-import { AeSdk, generateKeyPair } from "@aeternity/aepp-sdk";
+import { AeSdk } from "@aeternity/aepp-sdk";
 import {
   AffiliationTreasury,
   CommunityFactory,
   deployCommunityFactory,
 } from "../index";
-import { expectObjectWithMapsEqual } from "./utils";
+import { expectObjectWithMapsEqual, generateKeyPair } from "./utils";
 
 export const allowedNameLength = 20n;
 export const allowedNameChars = [

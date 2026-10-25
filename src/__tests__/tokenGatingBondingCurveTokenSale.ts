@@ -1,6 +1,14 @@
-import { beforeAll, describe, it } from "@jest/globals";
+import {
+  afterEach,
+  beforeAll,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  vi,
+} from "vitest";
 
-import { utils, wallets } from "@aeternity/aeproject";
+import { utils } from "@aeternity/aeproject";
 
 import { AE_AMOUNT_FORMATS, AeSdk } from "@aeternity/aepp-sdk";
 
@@ -18,6 +26,8 @@ import {
 } from "../index";
 import { CommunityFactory } from "../models";
 import { allowedNameChars, allowedNameLength } from "./communityFactory";
+
+const { wallets } = utils;
 
 describe("TokenGatingBondingCurveTokenSale.ts", () => {
   let aeSdk: AeSdk;
@@ -57,7 +67,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
   });
 
   afterEach(async () => {
-    jest.clearAllMocks();
+    vi.clearAllMocks();
     await utils.rollbackSnapshot(aeSdk);
   });
 
@@ -203,7 +213,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
       });
 
       it("default slippage", async () => {
-        const buySpy = jest.spyOn(tokenSale.contract, "buy");
+        const buySpy = vi.spyOn(tokenSale.contract, "buy");
 
         await tokenSale.buy(2n);
         expect(buySpy.mock.calls[0][1]).toStrictEqual({
@@ -213,7 +223,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
       });
 
       it("no slippage", async () => {
-        const buySpy = jest.spyOn(tokenSale.contract, "buy");
+        const buySpy = vi.spyOn(tokenSale.contract, "buy");
 
         await tokenSale.buy(2n, undefined, 0);
         expect(buySpy.mock.calls[0][1]).toStrictEqual({
@@ -223,7 +233,7 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
       });
 
       it("negative slippage", async () => {
-        const buySpy = jest.spyOn(tokenSale.contract, "buy");
+        const buySpy = vi.spyOn(tokenSale.contract, "buy");
 
         await expect(tokenSale.buy(2n, undefined, -1)).rejects.toThrow(
           "AE_AMOUNT_NOT_SUFFICIENT",
@@ -394,21 +404,21 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
       });
 
       it("default slippage", async () => {
-        const sellSpy = jest.spyOn(tokenSale.contract, "sell");
+        const sellSpy = vi.spyOn(tokenSale.contract, "sell");
 
         await tokenSale.sell(2n);
         expect(sellSpy.mock.calls[0][1]).toStrictEqual("193068606000");
       });
 
       it("no slippage", async () => {
-        const sellSpy = jest.spyOn(tokenSale.contract, "sell");
+        const sellSpy = vi.spyOn(tokenSale.contract, "sell");
 
         await tokenSale.sell(2n, undefined, 0);
         expect(sellSpy.mock.calls[0][1]).toStrictEqual("199039800000");
       });
 
       it("negative slippage", async () => {
-        const sellSpy = jest.spyOn(tokenSale.contract, "sell");
+        const sellSpy = vi.spyOn(tokenSale.contract, "sell");
 
         await expect(tokenSale.sell(2n, undefined, -1)).rejects.toThrow(
           "MINIMAL_RETURN_NOT_MEET",
