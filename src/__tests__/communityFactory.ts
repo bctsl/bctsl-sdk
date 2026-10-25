@@ -194,17 +194,23 @@ describe("CommunityFactory", () => {
         );
 
         const buyAmount = BigInt(10 ** 18);
-        const rewardAmount = buyAmount * BigInt(5) / BigInt(1000);
-        await affiliationTreasury.contract.record_sale_transaction(invitee.publicKey, buyAmount, {
-          amount: rewardAmount
-        });
+        const rewardAmount = (buyAmount * BigInt(5)) / BigInt(1000);
+        await affiliationTreasury.contract.record_sale_transaction(
+          invitee.publicKey,
+          buyAmount,
+          {
+            amount: rewardAmount,
+          },
+        );
 
         const newState = await affiliationTreasury.state();
         expectObjectWithMapsEqual(newState, {
-          payout_periods: new Map([[
-            BigInt(Math.floor(Date.now() / 2592000000)), // 1000ms * 60s * 60m * 24h * 30d
-            new Map([[aeSdk.address, 3000000000000000n]])
-          ]]),
+          payout_periods: new Map([
+            [
+              BigInt(Math.floor(Date.now() / 2592000000)), // 1000ms * 60s * 60m * 24h * 30d
+              new Map([[aeSdk.address, 3000000000000000n]]),
+            ],
+          ]),
           affiliation_tree: new Map([[invitee.publicKey, aeSdk.address]]),
           invitation_codes: new Map([
             [invitation1.publicKey, [aeSdk.address, 50031545098999712n, true]], // true=redeemed
@@ -212,28 +218,39 @@ describe("CommunityFactory", () => {
             [invitation3.publicKey, [aeSdk.address, 50031545098999712n, false]],
           ]),
           unique_invitees: new Map([
-            [aeSdk.address, {
-              "WaitingForInvitations": [
-                new Set(),
-                new Map([[invitee.publicKey, 1000000000000000000n]])
-              ]
-            }]
+            [
+              aeSdk.address,
+              {
+                WaitingForInvitations: [
+                  new Set(),
+                  new Map([[invitee.publicKey, 1000000000000000000n]]),
+                ],
+              },
+            ],
           ]),
         });
       });
 
       it("should get invitation code", async () => {
-        const invitationCode = await affiliationTreasury.getInvitationCode(invitation1.publicKey);
-        expect(invitationCode).toEqual([aeSdk.address, 50031545098999712n, true]);
+        const invitationCode = await affiliationTreasury.getInvitationCode(
+          invitation1.publicKey,
+        );
+        expect(invitationCode).toEqual([
+          aeSdk.address,
+          50031545098999712n,
+          true,
+        ]);
       });
 
       it("should get unique invitee", async () => {
-        const UniqueInvitee = await affiliationTreasury.getUniqueInvitee(aeSdk.address);
+        const UniqueInvitee = await affiliationTreasury.getUniqueInvitee(
+          aeSdk.address,
+        );
         expectObjectWithMapsEqual(UniqueInvitee, {
-          "WaitingForInvitations": [
+          WaitingForInvitations: [
             new Set(),
             new Map([[invitee.publicKey, 1000000000000000000n]]),
-          ]
+          ],
         });
       });
     });

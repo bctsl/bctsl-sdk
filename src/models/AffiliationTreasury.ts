@@ -8,14 +8,16 @@ import {
 
 export type InvitationCode = [Encoded.AccountAddress, bigint, boolean];
 
-export type InvitationCodes = Map<
-  bigint,
-  InvitationCode
->;
+export type InvitationCodes = Map<bigint, InvitationCode>;
 
 export type UniqueInvitees =
   | { ThresholdReached: [] }
-  | { WaitingForInvitations: [Encoded.AccountAddress[], Map<Encoded.AccountAddress, bigint>] };
+  | {
+      WaitingForInvitations: [
+        Encoded.AccountAddress[],
+        Map<Encoded.AccountAddress, bigint>,
+      ];
+    };
 
 export interface AffiliationTreasuryState {
   payout_periods: Map<bigint, Map<Encoded.AccountAddress, bigint>>;
@@ -24,11 +26,11 @@ export interface AffiliationTreasuryState {
   unique_invitees: Map<
     bigint,
     | {
-      WaitingForInvitations: [
-        [Encoded.AccountAddress],
-        Map<Encoded.AccountAddress, bigint>,
-      ];
-    }
+        WaitingForInvitations: [
+          [Encoded.AccountAddress],
+          Map<Encoded.AccountAddress, bigint>,
+        ];
+      }
     | { ThresholdReached: [] }
   >;
 }
@@ -62,7 +64,11 @@ export class AffiliationTreasury {
       invitationAddress,
       redemptionFeeCover,
       invitationAmount,
-      { amount: (redemptionFeeCover + invitationAmount) * BigInt(invitationAddress.length) },
+      {
+        amount:
+          (redemptionFeeCover + invitationAmount) *
+          BigInt(invitationAddress.length),
+      },
     );
   }
 
@@ -78,7 +84,9 @@ export class AffiliationTreasury {
       .then(({ decodedResult }) => decodedResult as InvitationCodes);
   }
 
-  async getInvitationCode(address: Encoded.AccountAddress): Promise<InvitationCode> {
+  async getInvitationCode(
+    address: Encoded.AccountAddress,
+  ): Promise<InvitationCode> {
     return this.contract
       .get_invitation_code(address)
       .then(({ decodedResult }) => decodedResult as InvitationCode);

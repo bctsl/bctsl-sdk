@@ -7,16 +7,22 @@ export function generateKeyPair() {
   return { publicKey: account.address, secretKey: account.secretKey };
 }
 
-function expectMapsEqual(map1: Map<any, any>, map2: Map<any, any>) {
+function expectMapsEqual(
+  map1: Map<unknown, unknown>,
+  map2: Map<unknown, unknown>,
+) {
   expect([...map1.entries()].sort()).toEqual([...map2.entries()].sort());
 }
 
-export function expectObjectWithMapsEqual(obj1: any, obj2: any) {
-  for (const key in obj1) {
-    if (obj1[key] instanceof Map && obj2[key] instanceof Map) {
-      expectMapsEqual(obj1[key], obj2[key]);
+export function expectObjectWithMapsEqual(obj1: object, obj2: object) {
+  const actual = obj1 as Record<string, unknown>;
+  const expected = obj2 as Record<string, unknown>;
+
+  for (const key in actual) {
+    if (actual[key] instanceof Map && expected[key] instanceof Map) {
+      expectMapsEqual(actual[key], expected[key]);
     } else {
-      expect(obj1[key]).toEqual(obj2[key]);
+      expect(actual[key]).toEqual(expected[key]);
     }
   }
 }

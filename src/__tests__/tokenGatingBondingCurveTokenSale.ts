@@ -472,7 +472,9 @@ describe("TokenGatingBondingCurveTokenSale.ts", () => {
       it("split function logic", async () => {
         const countTokenDecimals = await tokenSale.createSellAllowance(1n);
         expect(countTokenDecimals).toEqual("1000000000000000000"); // this is expected to be in the smallest unit
-        const sellReturn = await tokenSale.sellWithExistingAllowance(countTokenDecimals) as { decodedResult: bigint };
+        const sellReturn = (await tokenSale.sellWithExistingAllowance(
+          countTokenDecimals,
+        )) as { decodedResult: bigint };
         expect(sellReturn.decodedResult).toEqual(99524875000n); // this is expected to be in aetto
       });
     });

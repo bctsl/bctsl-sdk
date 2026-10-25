@@ -41,9 +41,10 @@ export class CommunityFactory {
     const createCollection = await this.contract.create_collection(
       name,
       allowedNameLength,
-      allowedNameChars, {
+      allowedNameChars,
+      {
         amount: 555 * 10 ** 18,
-      }
+      },
     );
     return createCollection.decodedResult;
   }
