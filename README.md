@@ -17,7 +17,7 @@ const COMMUNITY_FACTORY_CONTRACT_ADDRESS = "ct_25cqTw85wkF5cbcozmHHUCuybnfH9WaRZ
 
 const communityFactory = await initCommunityFactory(aeSdk, COMMUNITY_FACTORY_CONTRACT_ADDRESS);
 
-const allowedNameLength = 20;
+const allowedNameLength = 20n;
 const allowedNameChars = [
       { SingleChar: [45] }, // -
       { CharRangeFromTo: [48, 57] }, // 0-9
@@ -44,7 +44,7 @@ await communityTokenSale.buy(2n); // optionally pass denomination, passing strin
 await communityTokenSale.sell(2n); // optionally pass denomination, passing string (for float and higher precision) or number is also possible
 
 // manage the community
-const communityManagement = await communityFactory.getCommunityManagement(communityTokenSale.address);
+const communityManagement = await communityFactory.getCommunityManagementContract(communityTokenSale.address);
 const meta_info = await communityManagement.meta_info();
 ```
 
@@ -61,7 +61,7 @@ const meta_info = await communityManagement.meta_info();
 ## Development and Architecture
 
  - `models/TokenSale.ts` implements the shared logic for the token sale, e.g. fetching price, base metainfo, buying the token or instantiating the token contract itself.
- - `models/BondingCureveTokenSale.ts` extends this implementation which logic specific to that sale type.
+ - `models/BondingCurveTokenSale.ts` extends this implementation which logic specific to that sale type.
  - `lib/bondingCurve.ts` implements creation and initialization utils for this sale type, an sdk instance can be passed by the implementor to interact with the blockchain as required by the use-case.
  - `interfaces/options` includes the interfaces for creation options for token sales, again with base implementation and extension of that for the specific sale type.
  - `interfaces/metaInfo` includes the interfaces for returned meta information for token sales as well as the token information itself, again with base implementation and extension of that for the specific sale type.
