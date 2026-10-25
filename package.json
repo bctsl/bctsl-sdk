@@ -1,6 +1,6 @@
 {
   "name": "bctsl-sdk",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "SDK to interface with bctsl-contracts",
   "main": "./.build/esm/index.js",
   "types": "./.build/types/index.d.ts",
